@@ -11,6 +11,9 @@ class MyFormPage extends StatefulWidget {
 class _MyFormPageState extends State<MyFormPage> {
   final _formKey = GlobalKey<FormState>();
   String _namaLengkap = "";
+  String _alamat = "";
+  bool jenjangSmp = false;
+  bool jenjangSma = false;
   bool jenjangSarjana = false;
   bool jenjangDiploma = false;
   bool jenjangMagister = false;
@@ -26,6 +29,8 @@ class _MyFormPageState extends State<MyFormPage> {
       appBar: AppBar(
         title: Text('Form'),
       ),
+
+      // Drawer menu 
       drawer: Drawer(
         child: Column(
           children: [
@@ -60,18 +65,24 @@ class _MyFormPageState extends State<MyFormPage> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                Padding(
+                 Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
                   // Menggunakan padding sebesar 8 pixels
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     decoration: InputDecoration(
-                      hintText: "Contoh: Pak Dengklek",
+                      hintText: "Contoh: Annisa Az Zahra",
                       labelText: "Nama Lengkap",
                       // Menambahkan icon agar lebih intuitif
                       icon: const Icon(Icons.people),
                       // Menambahkan circular border agar lebih rapi
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     // Menambahkan behavior saat nama diketik
@@ -95,11 +106,52 @@ class _MyFormPageState extends State<MyFormPage> {
                     },
                   ),
                 ),
+                ),
+            
+                Padding(
+                  // Menggunakan padding sebesar 8 pixels
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    minLines: 3, // any number you need (It works as the rows for the textarea)
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      hintText: "Contoh: Jl. Kenanga II Lintas",
+                      labelText: "Alamat Domisili",
+                       
+                      // Menambahkan icon agar lebih intuitif
+                      icon: const Icon(Icons.home),
+                      // Menambahkan circular border agar lebih rapi
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    // Menambahkan behavior saat nama diketik
+                    onChanged: (String? value) {
+                      setState(() {
+                        _alamat = value!;
+                      });
+                    },
+                    // Menambahkan behavior saat data disimpan
+                    onSaved: (String? value) {
+                      setState(() {
+                        _alamat = value!;
+                      });
+                    },
+                    // Validator sebagai validasi form
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Alamat tidak boleh kosong!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
                 Container(
                   margin: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,14 +161,37 @@ class _MyFormPageState extends State<MyFormPage> {
                         title: Text("Jenjang"),
                       ),
                       CheckboxListTile(
+                        title: const Text('SMP'),
+                        value: jenjangSmp,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            jenjangSmp = value!;
+                            if (value) {
+                              jenjangSma = jenjangSarjana = jenjangMagister = jenjangDiploma = jenjangDoktor = false;
+                            }
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
+                        title: const Text('SMA'),
+                        value: jenjangSma,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            jenjangSma = value!;
+                            if (value) {
+                              jenjangSmp = jenjangSarjana = jenjangMagister = jenjangDiploma = jenjangDoktor = false;
+                            }
+                          });
+                        },
+                      ),
+                      CheckboxListTile(
                         title: const Text('Sarjana'),
                         value: jenjangSarjana,
                         onChanged: (bool? value) {
                           setState(() {
                             jenjangSarjana = value!;
                             if (value) {
-                              jenjangMagister =
-                                  jenjangDiploma = jenjangDoktor = false;
+                             jenjangSmp = jenjangSma = jenjangMagister = jenjangDiploma = jenjangDoktor = false;
                             }
                           });
                         },
@@ -128,8 +203,7 @@ class _MyFormPageState extends State<MyFormPage> {
                           setState(() {
                             jenjangDiploma = value!;
                             if (value) {
-                              jenjangMagister =
-                                  jenjangSarjana = jenjangDoktor = false;
+                              jenjangSmp = jenjangSarjana = jenjangMagister = jenjangSma = jenjangDoktor = false;
                             }
                           });
                         },
@@ -141,8 +215,7 @@ class _MyFormPageState extends State<MyFormPage> {
                           setState(() {
                             jenjangMagister = value!;
                             if (value) {
-                              jenjangDiploma =
-                                  jenjangSarjana = jenjangDoktor = false;
+                              jenjangSmp = jenjangSma = jenjangSarjana = jenjangDiploma = jenjangDoktor = false;
                             }
                           });
                         },
@@ -154,8 +227,7 @@ class _MyFormPageState extends State<MyFormPage> {
                           setState(() {
                             jenjangDoktor = value!;
                             if (value) {
-                              jenjangMagister =
-                                  jenjangSarjana = jenjangDiploma = false;
+                             jenjangSmp = jenjangSma = jenjangSarjana = jenjangDiploma = jenjangMagister = false;
                             }
                           });
                         },
@@ -215,7 +287,7 @@ class _MyFormPageState extends State<MyFormPage> {
                 ),
                 TextButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue),
+                    backgroundColor: MaterialStateProperty.all(Colors.red),
                   ),
                   child: const Text(
                     "Simpan",
@@ -228,9 +300,9 @@ class _MyFormPageState extends State<MyFormPage> {
                         builder: (context) {
                           return Dialog(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            elevation: 15,
+                            elevation: 16,
                             child: Container(
                               child: ListView(
                                 padding:
@@ -241,9 +313,10 @@ class _MyFormPageState extends State<MyFormPage> {
                                   const SizedBox(height: 20),
                                   // TODO: Munculkan informasi yang didapat dari form
                                   Center(child: Text('Nama: $_namaLengkap')),
+                                  Center(child: Text('Alamat domisili: $_alamat')),
                                   Center(
                                       child: Text(
-                                          'Jenjang: ${jenjangSarjana ? 'Sarjana' : ''}${jenjangDiploma ? 'Diploma' : ''}${jenjangMagister ? 'Magister' : ''}${jenjangDoktor ? 'Doktor' : ''}')),
+                                          'Jenjang: ${jenjangSarjana ? 'Sarjana' : ''}${jenjangDiploma ? 'Diploma' : ''}${jenjangMagister ? 'Magister' : ''}${jenjangDoktor ? 'Doktor' : ''}${jenjangSmp ? 'SMP' : ''}${jenjangSma ? 'Sarjana' : ''}')),
                                   Center(child: Text('Umur: ${umur.round()}')),
                                   Center(child: Text('Kelas PBP: $kelasPBP')),
                                   Center(
